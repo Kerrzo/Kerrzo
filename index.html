@@ -1,1 +1,144 @@
-hello 42!
+<html>
+
+<head>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<style>
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #2c3e50;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    }
+
+    body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    }
+
+    h1 {
+    color: #8e44ad;
+    font-size: 4rem;
+    display: block;
+    width: 100%;
+    text-align: center;
+    }
+    @media screen and (max-width: 600px) {
+    h1 {
+        font-size: 3rem;
+    }
+    }
+
+    p {
+    color: #f1c40f;
+    font-size: 1.2rem;
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+    }
+
+    .btn {
+    box-sizing: border-box;
+    appearance: none;
+    background-color: transparent;
+    border: 2px solid #2ecc71;
+    border-radius: 0.6em;
+    color: #2ecc71;
+    cursor: pointer;
+    display: flex;
+    align-self: center;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 10px;
+    padding: 1.2em 2.8em;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    }
+    .btn:hover, .btn:focus {
+    color: #fff;
+    outline: 0;
+    }
+
+    .primary {
+    transition: box-shadow 100ms ease-in-out, color 300ms ease-in-out;
+    }
+    .primary:hover {
+    box-shadow: 0 0 40px 40px #2ecc71 inset;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+    <p>
+        Check console or network tab of developer tools for result
+      </p>
+      <button onClick="payTest()" class="btn primary" >
+        Test Payment
+      </button>
+
+</body>
+
+<script>
+
+
+var payConfig = {
+  method: 'post',
+  url: "https://stage-v4.partnerportal.internationaltowers.com/payment/add-to-cart",
+  data : {
+   "jwt":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlZBTElEQVRFIFRISVMiLCJpYXQiOjE1MTYyMzkwMjJ9.JA8htNUEtogwoZ7a9jvXbJBFVBjUYAHqWh6-1dUqhSk",
+   "successURL":"http://localhost:59145/pricing?success",
+   "errorURL":"http://localhost:59145/pricing?error",
+   "sku":"Service Asset-PSLvlLExkk-phAPK-QYtTw",
+   "userName":"cam@acaprojects.com",
+   "orderRequests":[ 
+      {
+         "ServiceExternalKey":"IsIDA3Zb9UCd-Tclsf7zpA",
+         "ItemNumber":0,
+         "Dates":[
+            {
+               "StartDate":"17/06/2020",
+               "EndDate":"17/06/2020",
+               "StartTime":"08:00",
+               "EndTime":"15:00"
+            }
+         ],
+         "Type":"",
+         "ResourceEmail":"",
+         "Title":"Service Asset" 
+      }
+   ]
+},
+  headers: { 
+    'Content-Type': 'application/json'
+  }
+};
+
+function payTest() {
+  axios(payConfig)
+.then(function (response) {
+  console.log(JSON.stringify(response.data));
+})
+.catch(function (error) {
+  console.log(error);
+});
+}
+
+</script>
+
+</html>
