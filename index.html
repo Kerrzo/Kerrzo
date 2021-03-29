@@ -67,7 +67,7 @@
 				const material2 = new THREE.MeshBasicMaterial( { map: texture } );
 
 				const mesh2 = new THREE.Mesh( geometry2, material2 );
-				mesh2.rotation.y = - Math.PI / 1.05; 
+				mesh2.rotation.y = - Math.PI * 2; 
 				mesh2.layers.set( 2 ); // display in right eye only
 				scene.add( mesh2 );
 
