@@ -9,7 +9,7 @@
 	<body>
 		<div id="container"></div>
 
-		<video id="video" loop muted crossOrigin="anonymous" playsinline style="display:none">
+		<video id="video" loop muted crossOrigin="anonymous" style="display:none">
 			<source src="https://testvideosfromneon8.s3-ap-southeast-2.amazonaws.com/Little+Match+Girl-1440s-3D-16mbps.mp4">
 		</video>
 
@@ -39,7 +39,7 @@
 				const video = document.getElementById( 'video' );
                 
 				video.play();
-                video.currentTime = 1200;
+                video.currentTime = 1700;
 
 				const texture = new THREE.VideoTexture( video );
 
@@ -56,7 +56,7 @@
 
 				for ( let i = 0; i < uvs1.length; i += 2 ) {
 
-					uvs1[ i ] *= 0.8;
+					uvs1[ i ] *= 0.90;
                     uvs1[ i ] += 0.5;
 
 				}
@@ -64,7 +64,7 @@
 				const material1 = new THREE.MeshBasicMaterial( { map: texture } );
 
 				const mesh1 = new THREE.Mesh( geometry1, material1 );
-				mesh1.rotation.y = - Math.PI / 2;
+				mesh1.rotation.y = - Math.PI / 1.05;
 				mesh1.layers.set( 1 ); // display in left eye only
 				scene.add( mesh1 );
 
@@ -76,7 +76,7 @@
 
 				for ( let i = 0; i < uvs2.length; i += 2 ) {
 
-					uvs2[ i ] *= 0.8;
+					uvs2[ i ] *= 0.90;
 					uvs2[ i ] += 0.5;
 
 				}
@@ -84,7 +84,7 @@
 				const material2 = new THREE.MeshBasicMaterial( { map: texture } );
 
 				const mesh2 = new THREE.Mesh( geometry2, material2 );
-				mesh2.rotation.y = - Math.PI / 2;
+				mesh2.rotation.y = - Math.PI / 1.05; 
 				mesh2.layers.set( 2 ); // display in right eye only
 				scene.add( mesh2 );
 
