@@ -20,10 +20,9 @@
 		<script type="module">
 
 			import * as THREE 			 				from '/three/build/three.module.js';
-			import { DeviceOrientationControls }     from '/three/examples/jsm/controls/DeviceOrientationControls.js';
 		
 
-			let camera, scene, renderer, video, texture, controls;
+			let camera, scene, renderer, video, texture;
 
 			const startButton = document.getElementById( 'startButton' );
 			startButton.addEventListener( 'click', function () {
@@ -45,7 +44,6 @@
 				overlay.remove();
 
 				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 );
-				controls = new DeviceOrientationControls( camera );
 				scene = new THREE.Scene();
 
 				var geo = new THREE.PlaneBufferGeometry(window.innerWidth / 20, window.innerHeight / 20, 10, 10);
@@ -72,7 +70,6 @@
 			function animate() {
 
 				window.requestAnimationFrame( animate );
-				controls.update();
 				renderer.render( scene, camera );
 			}
 
