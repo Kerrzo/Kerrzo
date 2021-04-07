@@ -71,13 +71,11 @@
 
 					const geometry = new THREE.SphereGeometry( 500, 60, 40 );
 					geometry.scale( - 1, 1, 1 );
-					const uvs2 = geometry2.attributes.uv.array;
+					const uvs = geometry.attributes.uv.array;
 
-					for ( let i = 0; i < uvs2.length; i += 2 ) {
-
-						uvs2[ i ] *= 0.8;
+					for ( let i = 0; i < uvs.length; i += 2 ) {
+						uvs[ i ] *= 0.8;
 						uvs2[ i ] += view.offset;
-
 					}
 					
 					const material = new THREE.MeshBasicMaterial( { map: texture } );
