@@ -48,8 +48,10 @@
 			function init() {
 
 				video = document.getElementById('video');
-				video.currentTime = 1200;
 				video.play();
+				
+				video.currentTime = 1200;
+
 
 				texture = new THREE.VideoTexture( video );
 				
