@@ -1,5 +1,4 @@
 
-  
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -7,6 +6,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
+		<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
 	</head>
 	<body>
 		<div id="overlay">
@@ -24,6 +24,19 @@
 
 			let camera, scene, renderer, controls, video, texture;
 
+			const views = [
+				{	// left eye
+					layer: 1,
+					viewPort: new THREE.Vector4( 0, 0, window.innerWidth / 2, window.innerHeight ),
+					camera:  new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 )
+				},
+				{	// right eye
+					layer: 2,
+					viewPort: new THREE.Vector4( window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight ),
+					camera: new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 )
+				}
+			];
+
 			const startButton = document.getElementById( 'startButton' );
 			startButton.addEventListener( 'click', function () {
 
@@ -36,43 +49,61 @@
 
 				video = document.getElementById('video');
 				video.currentTime = 1200;
-				texture = new THREE.VideoTexture( video );
 				video.play();
 
+				texture = new THREE.VideoTexture( video );
+				
 				const overlay = document.getElementById( 'overlay' );
 				overlay.remove();
 
-				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 );
-				controls = new DeviceOrientationControls( camera );
+				//controls = new DeviceOrientationControls( camera );
 				scene = new THREE.Scene();
-
-				const geometry = new THREE.SphereGeometry( 500, 60, 40 );
-				geometry.scale( - 1, 1, 1 );
-
-				const material = new THREE.MeshBasicMaterial( { map: texture } );
-				const mesh = new THREE.Mesh( geometry, material );
-				scene.add( mesh );
 				
+				for ( let index = 0; index < views.length; ++ index ) {
 
-		
+					const view = views[ index ];
 
-				//
+					view.camera.layers.enable(view.layer);
+
+					const geometry = new THREE.SphereGeometry( 500, 60, 40 );
+					geometry.scale( - 1, 1, 1 );
+					
+					const material = new THREE.MeshBasicMaterial( { map: texture } );
+					const mesh = new THREE.Mesh( geometry, material );
+
+					mesh.layers.set(view.layer);
+					scene.add( mesh );
+				}
+
+				//Setup renderer for WEBGL
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
 
-				//
+				//Handle browser resize
 				window.addEventListener( 'resize', onWindowResize );
 			}
 
 			function animate() {
 
-				window.requestAnimationFrame( animate );
+				window.requestAnimationFrame(animate);
 
-				controls.update();
-				renderer.render( scene, camera );
+				for ( let index = 0; index < views.length; ++ index ) {
 
+					const view = views[ index ];
+
+					renderer.setViewport(view.viewPort);
+					renderer.setScissor(view.viewPort);
+					renderer.setScissorTest(true);
+
+					view.camera.layers.disableAll();
+					view.camera.layers.enable(view.layer);
+
+					renderer.render( scene, view.camera );
+				}
+
+				//controls.update()
 			}
 
 			function onWindowResize() {
