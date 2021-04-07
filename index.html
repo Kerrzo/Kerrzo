@@ -28,12 +28,12 @@
 				{	// left eye
 					layer: 1,
 					viewPort: new THREE.Vector4( 0, 0, window.innerWidth / 2, window.innerHeight ),
-					camera:  new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 )
+					camera:  new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 ),
 				},
 				{	// right eye
 					layer: 2,
 					viewPort: new THREE.Vector4( window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight ),
-					camera: new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 )
+					camera: new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1100 ),
 				}
 			];
 
@@ -71,6 +71,8 @@
 					const material = new THREE.MeshBasicMaterial( { map: texture } );
 					const mesh = new THREE.Mesh( geometry, material );
 
+					view.device = new DeviceOrientationControls( view.camera )
+
 					mesh.layers.set(view.layer);
 					scene.add( mesh );
 				}
@@ -100,10 +102,9 @@
 					view.camera.layers.disableAll();
 					view.camera.layers.enable(view.layer);
 
+					view.device.update();
 					renderer.render( scene, view.camera );
 				}
-
-				//controls.update()
 			}
 
 			function onWindowResize() {
