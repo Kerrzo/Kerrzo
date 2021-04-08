@@ -54,7 +54,6 @@
 
 			video = document.getElementById('video');
 			video.play();
-
 			video.currentTime = 1200;
 
 			texture = new THREE.VideoTexture(video);
@@ -73,11 +72,12 @@
 
 				const geometry = new THREE.SphereGeometry(500, 60, 40);
 				geometry.scale(- 1, 1, 1);
+
 				const uvs = geometry.attributes.uv.array;
 
 				for (let i = 0; i < uvs.length; i += 2) {
 					uvs[i] *= 0.8;
-					uvs[i] += view.uvOffset; //shift texture to get the right side of video for right eye
+					uvs[i] += 0.5; //shift texture to get the right side of video for right eye
 				}
 
 				const material = new THREE.MeshBasicMaterial({ map: texture });
@@ -87,6 +87,7 @@
 
 				mesh.layers.set(view.layer);
 				scene.add(mesh);
+
 			}
 
 			//Setup renderer for WEBGL
@@ -97,7 +98,8 @@
 
 			//Handle browser resize
 			window.addEventListener('resize', onWindowResize);
-		}
+
+		}	 
 
 		function animate() {
 
@@ -108,23 +110,31 @@
 
 				const view = views[index];
 
-				renderer.setViewport(view.viewPort);
-				renderer.setScissor(view.viewPort);
-				renderer.setScissorTest(true);
+				view.device.update();
 
 				view.camera.layers.disableAll();
 				view.camera.layers.enable(view.layer);
 
-				view.device.update();
+				renderer.setViewport(view.viewPort);
+				renderer.setScissor(view.viewPort);
+				renderer.setScissorTest(true);
+
+				view.camera.updateProjectionMatrix();
+				
 				renderer.render(scene, view.camera);
+
 			}
 		}
 
 		function onWindowResize() {
 
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
+			views.forEach(view => {
 
+				view.camera.aspect = window.innerWidth / window.innerHeight;
+				view.camera.updateProjectionMatrix();
+
+			});
+			
 			renderer.setSize(window.innerWidth, window.innerHeight);
 
 		}
