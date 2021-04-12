@@ -10,7 +10,7 @@
 	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 </head>
 
-<body>
+<body onorientationchange="changeOrientation(event);">
 	<div id="overlay">
 		<button id="startButton">Watch Movie</button>
 	</div>
@@ -79,7 +79,7 @@
 				const uvs = geometry.attributes.uv.array;
 				for (let i = 0; i < uvs.length; i += 2) {
 					uvs[i] *= 0.5;
-					uvs[i] = view.uvOffset; //shift texture e.g. get the right side of stereoscopic video for right eye
+					uvs[i] += view.uvOffset; //shift texture e.g. get the right side of stereoscopic video for right eye
 				}
 
 				const material = new THREE.MeshBasicMaterial({ map: texture });
@@ -138,6 +138,12 @@
 			});
 			
 			renderer.setSize(window.innerWidth, window.innerHeight);
+
+		}
+
+		function changeOrientation(event) {
+
+			//event.preventDefault();
 
 		}
 
