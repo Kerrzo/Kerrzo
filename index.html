@@ -31,13 +31,13 @@
 			{	// left eye
 				layer: 1,
 				uvOffset: 0,
-				viewPort: new THREE.Vector4(0, window.innerHeight / 2, window.innerWidth, window.innerHeight / 2),
+				viewPort: new THREE.Vector4(0, 0, window.innerWidth / 2, window.innerHeight),
 				camera: new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100),
 			},
 			{	// right eye
 				layer: 2,
 				uvOffset: 0.5,
-				viewPort: new THREE.Vector4(0, 0, window.innerWidth, window.innerHeight / 2),
+				viewPort: new THREE.Vector4(window.innerWidth / 2, 0, window.innerWidth / 2, window.innerHeight),
 				camera: new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100),
 			}
 		];
@@ -52,18 +52,21 @@
 
 		function init() {
 
+			//Get handle to html5 video player to get the texture
 			video = document.getElementById('video');
 			video.play();
-			video.currentTime = 1200;
 
+			 //Remove later
+			setTimeout(function(){ video.currentTime = 1200; }, 500);
 			texture = new THREE.VideoTexture(video);
 
+			//Remove later
 			const overlay = document.getElementById('overlay');
 			overlay.remove();
 
 			scene = new THREE.Scene();
 
-			//Create a sphere with the video texture and a camera inside for each view (left/right eye)
+			//Create a sphere with the video texture inside and a camera thats controlled by the device orientation for each view (left/right eye)
 			for (let index = 0; index < views.length; ++index) {
 
 				const view = views[index];
@@ -74,10 +77,9 @@
 				geometry.scale(- 1, 1, 1);
 
 				const uvs = geometry.attributes.uv.array;
-
 				for (let i = 0; i < uvs.length; i += 2) {
-					uvs[i] *= 0.8;
-					uvs[i] += 0.5; //shift texture to get the right side of video for right eye
+					uvs[i] *= 0.5;
+					uvs[i] = view.uvOffset; //shift texture e.g. get the right side of stereoscopic video for right eye
 				}
 
 				const material = new THREE.MeshBasicMaterial({ map: texture });
@@ -119,7 +121,7 @@
 				renderer.setScissor(view.viewPort);
 				renderer.setScissorTest(true);
 
-				view.camera.updateProjectionMatrix();
+				view.camera.updateProjectionMatrix();	
 				
 				renderer.render(scene, view.camera);
 
