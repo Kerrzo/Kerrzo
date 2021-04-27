@@ -1,0 +1,124 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Matterport Sample</title>
+  <meta name="description" content="Matterport Sample">
+  <meta name="author" content="Paul Kerr">
+  <script src='https://static.matterport.com/showcase-sdk/2.0.1-0-g64e7e88/sdk.js'></script>
+
+</head>
+
+<body>
+
+    <iframe width="853" height="480" src="https://my.matterport.com/show?m=114q9BX94wD" frameborder="0" allowfullscreen allow="xr-spatial-tracking" id="showcase_iframe"></iframe>
+
+    <div id='tags'></div>
+
+    <button onclick="addTag()">Add Tag</button>
+    <button onclick="placeTag()">Place Tag</button>
+
+
+    <script>
+
+            let tag, mpSdk;
+
+            var iframe = document.getElementById('showcase_iframe');
+
+            iframe.addEventListener('load', showcaseLoader, true);
+
+            function showcaseLoader() {
+                try {
+                    window.MP_SDK.connect(
+                    iframe, // Obtained earlier
+                    '467rf3mctmxe2ekqmbd6ceqta', // Your API key
+                    '3.10' // SDK version you are using
+                    // Use the latest version you can for your app
+                    )
+                    .then(loadedShowcaseHandler);
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            };
+
+            function loadedShowcaseHandler(showcase)
+            {
+                    mpSdk = showcase;
+                    mpSdk.Mattertag.data.subscribe({
+                    onAdded: function (index, item, collection) {
+                        console.log('Mattertag added to the collection', index, item, collection);
+                    },
+                    onRemoved: function (index, item, collection) {
+                        console.log('Mattertag removed from the collection', index, item, collection);
+                    },
+                    onUpdated: function (index, item, collection) {
+                        console.log('Mattertag updated in place in the collection', index, item, collection);
+                    }
+                    });  
+            }
+
+            function addTag()
+            {
+                mpSdk.Mattertag.add([{
+                label: "New tag",
+                description: "This tag was added through the Matterport SDK",
+                anchorPosition: {
+                x: 0,
+                y: 0,
+                z: 0,
+                },
+                stemVector: { // make the Mattertag stick straight up and make it 0.30 meters (~1 foot) tall
+                x: 0,
+                y: 0.30,
+                z: 0,
+                },
+                color: { // blue disc
+                r: 0.0,
+                g: 0.0,
+                b: 1.0,
+                },
+                floorIndex: 0, // optional, if not specified the sdk will provide an estimate of the floor index for the anchor position provided.
+                }])
+            }
+
+            function placeTag2()
+            {
+                mpSdk.Mattertag.add([{
+                    label: "Matterport Tag",
+                    description: "",
+                    anchorPosition: {x: 0, y: 0, z: 0},
+                    stemVector: {x:0, y: 0, z: 0},
+                    color: {r: 1, g: 0, b: 0},
+                    }])
+                    .then((sid) => {
+                        tag = sid[0];
+                        return mpSdk.Mattertag.getData();
+                    })
+                    .then( (collection) => {
+                        const t_sid = collection.find( elem => elem.sid === tag);
+                        console.log(t_sid)
+                        addingTag = false;
+                    })
+                    .then(() => {
+                        
+                    })
+                    .catch( (e) => {
+                        console.error(e);
+                        addingTag = false;
+                    });
+                
+            }
+
+            function placeTag(){
+                mpSdk.Mattertag.navigateToTag(tag, mpSdk.Mattertag.Transition.INSTANT);
+                tag = null;
+                movingTag = false;
+            }
+            
+
+    </script>
+</body>
+</html>
