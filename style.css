@@ -6,3 +6,8 @@ body {
     text-align: center;
     margin-top: 20px;
 }
+
+#canvas {
+    width: 850;
+    height: 817px;
+}
