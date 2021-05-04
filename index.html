@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="riveCanvas" width=512 height=512></canvas>
+    <canvas id="riveCanvas" width=850 height=812></canvas>
     <script src="https://unpkg.com/rive-canvas@latest/rive.js"></script>
     <script>
         ; (function () {
@@ -22,10 +22,9 @@
                     const asset = rive.load(new Uint8Array(buf)); // the Rive engine loads a Rive asset via raw bytes
 
                     const artboard = asset.defaultArtboard();
-                    console.log(artboard);
                     // now we can access the animations; let's get one called 'vibration'
-                    const vibrationAnim = artboard.animationByName('Reveal');
-                    const vibrationInstance = new rive.LinearAnimationInstance(vibrationAnim);
+                    const revealAnim = artboard.animationByName('Reveal');
+                    const vibrationInstance = new rive.LinearAnimationInstance(revealAnim);
                     // let's grab our canvas
                     const canvas = document.getElementById('riveCanvas');
                     const ctx = canvas.getContext('2d');
